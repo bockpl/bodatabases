@@ -13,8 +13,8 @@ ADD repos/ghetto.repo /etc/yum.repos.d/
 
 # SLURM
 
-ARG SLURM_TAG=slurm-19-05-1-2
-ARG GOSU_VERSION=1.11
+ARG SLURM_TAG=slurm-20-11-8-1
+ARG GOSU_VERSION=1.13
 
 RUN set -x \
     && export MUNGEUSER=991 \
@@ -42,6 +42,9 @@ RUN set -ex \
        munge-devel \
        python-devel \
        python-pip \
+       python3 \
+       python3-devel \
+       python3-pip \
        python34 \
        python34-devel \
        python34-pip \
@@ -56,7 +59,9 @@ RUN set -ex \
     && yum clean all \
     && rm -rf /var/cache/yum
 
-RUN pip install Cython nose && pip3.4 install Cython nose
+RUN pip3 install --upgrade pip
+
+RUN pip install Cython nose && pip3 install Cython nose
 
 #RUN set -x \
 #    && rngd -r /dev/urandom \
@@ -74,11 +79,17 @@ RUN set -ex \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64" \
     && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64.asc" \
     && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
-    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && gpg2 --import-ownertrust # mpapis@gmail.com \
+    && gpg2 --import-ownertrust # piotr.kuczynski@gmail.com \
+    && gpg2 --keyserver hkp://pgp.mit.edu/ --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB \
+#    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg2 --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+#    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
     && rm -rf "${GNUPGHOME}" /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu \
     && gosu nobody true
+
+RUN chmod 755 /usr/local/bin/gosu
 
 RUN set -x \
     && git clone https://github.com/SchedMD/slurm.git \
@@ -179,7 +190,7 @@ ansible-playbook Playbooks/install_glibc-dev.yml --connection=local --extra-vars
 rm -rf /boplaybooks && \
 # Skasowanie tymczasowego srodowiska git i ansible
 yum -y remove ansible --remove-leaves && \
-cd /; rm -rf /boplaybooksi ; 
+cd /; rm -rf /boplaybooks ; 
 
 # Dodanie autoryzacji  LDAP
 RUN  yum install -y \
