@@ -5,7 +5,7 @@ LABEL maintainer="pawel.adamczyk.1@p.lodz.pl"
 # SGE
 #ADD soge/sgeexecd.blueocean-v15 /etc/init.d/
 #ADD soge/sge.sh /etc/profile.d/
-#ADD soge/module.sh /etc/profile.d/
+ADD soge/module.sh /etc/profile.d/
 #
 #ADD soge/jemalloc-3.6.0-1.el7.x86_64.rpm /tmp/jemalloc-3.6.0-1.el7.x86_64.rpm
 #
