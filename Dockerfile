@@ -171,17 +171,17 @@ ansible-playbook Playbooks/install_Monit.yml --connection=local --extra-vars "va
 # Instalacja wymagan dla podsystemu Module
 ansible-playbook Playbooks/install_dep_Module.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
 # Instalacja wymagan dla oprogramowania Augustus
-ansible-playbook Playbooks/install_dep_Augustus.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
+#ansible-playbook Playbooks/install_dep_Augustus.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
 # Instalacja wymagan dla oprogramownia Ansys v19.2
-ansible-playbook Playbooks/install_dep_Ansys19.2.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
+#ansible-playbook Playbooks/install_dep_Ansys19.2.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
 # Instalacja wymagan dla oprogramowania Games
-ansible-playbook Playbooks/install_dep_Games.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
+#ansible-playbook Playbooks/install_dep_Games.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
 # Instalacja wymagan dla srodowiska MPI
-ansible-playbook Playbooks/install_dep_MPI.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
+#ansible-playbook Playbooks/install_dep_MPI.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
 # Instalacja wymagan dla srodowiska TensorBoard
-ansible-playbook Playbooks/install_dep_TensorBoard.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
+#ansible-playbook Playbooks/install_dep_TensorBoard.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
 # Instalacja wymagan dla oprogramowanie MatLab
-ansible-playbook Playbooks/install_dep_MatLab.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
+#ansible-playbook Playbooks/install_dep_MatLab.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
 # Instalacja narzedzi do interaktywnej wpracy w konsoli dla uzytkownikow klastra
 ansible-playbook Playbooks/install_boaccess_tools.yml --connection=local --extra-vars "var_host=127.0.0.1" && \
 # Instalacja glibc-devel dla gcc
@@ -199,6 +199,12 @@ RUN  yum install -y \
         nscd \
         openldap-clients \
         authconfig && \
+     yum clean all && \
+     rm -rf /var/cache/yum
+
+# dodanie libX11 dla srodowiska module
+RUN  yum install -y \
+        libX11.x86_64 && \
      yum clean all && \
      rm -rf /var/cache/yum
 
