@@ -204,7 +204,7 @@ RUN  yum install -y \
 
 # dodanie libX11 dla srodowiska module, oraz openssh
 RUN  yum install -y \
-        libX11.x86_64 && \
+        libX11.x86_64 \
         openssh && \
      yum clean all && \
      rm -rf /var/cache/yum
